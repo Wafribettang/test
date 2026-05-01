@@ -3,64 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saran User</title>
+    <title>Saran & Kritik</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             background-color: #f0f0f0;
             font-family: 'Arial Black', sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            padding: 20px;
             margin: 0;
         }
 
         .container {
-            background-color: #ffde03; /* Warna Kuning Terang */
+            background-color: #ffde03;
             border: 4px solid #000;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 10px 10px 0px 0px #000;
-            width: 90%;
+            width: 100%;
             max-width: 400px;
+            margin-bottom: 40px;
         }
 
         h2 {
-            margin-top: 0;
+            margin: 0 0 20px 0;
             text-transform: uppercase;
-            letter-spacing: -1px;
-            font-size: 2rem;
+            font-size: 1.8rem;
             border-bottom: 4px solid #000;
             display: inline-block;
-            margin-bottom: 20px;
         }
 
         textarea {
             width: 100%;
-            height: 150px;
+            height: 100px;
             border: 4px solid #000;
             padding: 10px;
             font-family: 'Courier New', monospace;
             font-weight: bold;
-            font-size: 1rem;
             box-sizing: border-box;
             background-color: #fff;
-            resize: none;
-        }
-
-        textarea:focus {
-            outline: none;
-            background-color: #e0fbfc;
+            margin-bottom: 10px;
         }
 
         button {
-            margin-top: 20px;
             width: 100%;
-            background-color: #ff5e5e; /* Warna Merah */
+            background-color: #ff5e5e;
             color: #fff;
             border: 4px solid #000;
             padding: 15px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 5px 5px 0px 0px #000;
@@ -72,11 +64,31 @@
             transform: translate(5px, 5px);
         }
 
-        #status {
-            margin-top: 15px;
-            font-size: 0.9rem;
+        /* Gaya List Saran */
+        #list-saran {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .saran-item {
+            background-color: #fff;
+            border: 3px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 6px 6px 0px 0px #32CD32; /* Warna Hijau */
+        }
+
+        .saran-text {
+            font-family: 'Courier New', monospace;
             font-weight: bold;
-            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            margin-top: 10px;
+            display: block;
+            color: #555;
         }
     </style>
 </head>
@@ -84,43 +96,73 @@
 
 <div class="container">
     <h2>KIRIM SARAN</h2>
-    <textarea id="isi_saran" placeholder="Tuliskan saran Anda di sini..."></textarea>
-    <button onclick="kirimSaran()">KIRIM SEKARANG!</button>
-    <div id="status"></div>
+    <textarea id="isi_saran" placeholder="Tulis kritik/saran..."></textarea>
+    <button onclick="kirimSaran()">KIRIM!</button>
+    <div id="status" style="margin-top:10px; font-size: 0.8rem;"></div>
+</div>
+
+<div id="list-saran">
+    <h2 style="background-color: #32CD32; padding: 5px 15px; color: white;">SARAN MASUK</h2>
+    <div id="saran-container">Memuat data...</div>
 </div>
 
 <script>
-    // MASUKKAN DATA ANDA DI SINI
     const SUPABASE_URL = 'https://dnwiofdtselnpjkpaqie.supabase.co';
     const SUPABASE_KEY = 'EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRud2lvZmR0c2VsbnBqa3BhcWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MDcyODcsImV4cCI6MjA5MzE4MzI4N30.rsN_bpiPgjzXsTUbyZ-q2pIIWxYEyilDeDednOYmYas';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function kirimSaran() {
-        const teks = document.getElementById('isi_saran').value;
-        const status = document.getElementById('status');
+    // Fungsi Ambil Data
+    async function ambilSaran() {
+        const container = document.getElementById('saran-container');
+        
+        const { data, error } = await _supabase
+            .from('saran_user')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-        if (!teks) {
-            status.innerText = "ISI DULU KONTENNYA!";
+        if (error) {
+            container.innerHTML = "Gagal memuat data.";
             return;
         }
 
+        if (data.length === 0) {
+            container.innerHTML = "Belum ada saran.";
+            return;
+        }
+
+        container.innerHTML = data.map(item => `
+            <div class="saran-item">
+                <div class="saran-text">${item.isi_saran}</div>
+                <span class="timestamp">${new Date(item.created_at).toLocaleString('id-ID')}</span>
+            </div>
+        `).join('');
+    }
+
+    // Fungsi Kirim Data
+    async function kirimSaran() {
+        const input = document.getElementById('isi_saran');
+        const status = document.getElementById('status');
+
+        if (!input.value) return;
+
         status.innerText = "MENGIRIM...";
 
-        const { data, error } = await supabase
+        const { error } = await _supabase
             .from('saran_user')
-            .insert([{ isi_saran: teks }]);
+            .insert([{ isi_saran: input.value }]);
 
         if (error) {
-            console.error(error);
-            status.innerText = "GAGAL TERKIRIM!";
-            status.style.color = "red";
+            status.innerText = "GAGAL! CEK RLS POLICY.";
         } else {
-            status.innerText = "SARAN BERHASIL MASUK!";
-            status.style.color = "blue";
-            document.getElementById('isi_saran').value = '';
+            status.innerText = "BERHASIL!";
+            input.value = '';
+            ambilSaran(); // Refresh list otomatis
         }
     }
+
+    // Load data saat web dibuka
+    ambilSaran();
 </script>
 
 </body>
