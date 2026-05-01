@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful & Sharp Design</title>
+    <style>
+        /* Reset & Base Style */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff; /* Tema Putih */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Header dengan Aksen Warna */
+        header {
+            border-bottom: 5px solid #ff5e57; /* Warna Merah Terang */
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #4834d4; /* Warna Ungu */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Card Section */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border: 3px solid #000; /* Border Hitam Tegas */
+            /* Border-radius sengaja tidak ada agar lancip */
+        }
+
+        /* Variasi Warna Border Card */
+        .card-blue { border-color: #0097e6; }
+        .card-green { border-color: #44bd32; }
+        .card-yellow { border-color: #e1b12c; }
+
+        /* Button Lancip */
+        .btn {
+            display: inline-block;
+            background: #f0932b; /* Warna Oranye */
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #000;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #eb4d4b;
+            transform: translate(-3px, -3px);
+            box-shadow: 5px 5px 0px #000;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            border-top: 1px solid #ddd;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Colorful Site</h1>
+            <p>Bersih, putih, dan bersudut tajam.</p>
+        </header>
+
+        <main class="grid">
+            <div class="card card-blue">
+                <h3>Fitur Biru</h3>
+                <p>Kotak ini memiliki border berwarna biru dengan sudut 90 derajat yang sempurna.</p>
+                <a href="#" class="btn">Klik Disini</a>
+            </div>
+
+            <div class="card card-green">
+                <h3>Aksen Hijau</h3>
+                <p>Warna-warna cerah memberikan energi pada tampilan latar belakang putih.</p>
+                <a href="#" class="btn" style="background: #44bd32;">Eksplor</a>
+            </div>
+
+            <div class="card card-yellow">
+                <h3>Sentuhan Kuning</h3>
+                <p>Desain minimalis modern sering menggunakan border tebal dan warna kontras.</p>
+                <a href="#" class="btn" style="background: #e1b12c;">Daftar</a>
+            </div>
+        </main>
+
+        <footer>
+            &copy; 2024 Colorful Sharp Design. Dibuat dengan semangat.
+        </footer>
+    </div>
+
+</body>
+</html>
